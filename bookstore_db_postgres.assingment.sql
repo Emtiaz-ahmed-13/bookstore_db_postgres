@@ -70,10 +70,10 @@ WHERE price=(SELECT MAX(price)FROM books)
 -- find the total number of order placed by each customer.
 -- join the 'orders' table with the 'customer' table on the customer ID and group the result by customer name to count the total number of orders for each customer.
 
-SELECT c.name as customer_name,COUNT(o.id) as total_orders
-FROM orders O
-JOIN CUSTOMER c ON o.customer_id=c.id
-GROUP BY c.name;
+SELECT c.id,c.name AS customer_name,COUNT(o.id) AS  total_orders
+FROM order o
+JOIN customers c ON o.customer_id =c.id
+GROUP BY  c.id,c.name;
 
 -- Task-04
 -- Calculate the total revenue generated from book sales.
@@ -112,10 +112,12 @@ SELECT * FROM books;
 -- Task-08
 --  Delete customers who haven't placed any orders.
 
-DELETE FROM customer
-USING orders
-WHERE customers.id=orders.customer_id
-AND orders.customer_id IS NULL;
+DELETE FROM customers c
+WHERE NOT EXISTS(
+SELECT 1
+FROM order o
+WHERE  o.customer_id=c.id
+);
 
 
 
